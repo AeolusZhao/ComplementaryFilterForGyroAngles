@@ -1,16 +1,16 @@
 clear all;
 
 %specify how many entries from the log file to read
-m = 3840;
+m = 2340;
 
 [time, accX, accY, accZ, gyroX, gyroY, gyroZ, dt] = readDataFromSensorLog(m);
 
 AngleXFromGyro = cumsum(gyroX) * dt; % degree
 AngleYFromGyro = cumsum(gyroY) * dt; % degree
-AngleZFromGyro = cumsum(gyroZ) * dt; % degree
+% AngleZFromGyro = cumsum(gyroZ) * dt; % degree
 
-AngleXFromAcc = atand( accY ./ sqrt(accX.^2 + accZ.^2) ) ; % degree
 AngleYFromAcc = atand( -accX ./ sqrt(accY.^2 + accZ.^2) ) ; % degree
+AngleXFromAcc = atand( accY ./ sqrt(accX.^2 + accZ.^2) ) ; % degree
 % AngleZFromAcc = atand( accZ./ sqrt(accX.^2 + accY.^2) ) ; % degree
 
 highCoe = 0.98; 
@@ -45,12 +45,12 @@ end
 
 figure(1); 
 plot(time, angleX, time, AngleXFromAcc, time, AngleXFromGyro);
-legend('angleX','AngleXFromAcc', 'AngleXFromGyro');
+legend('angleY','AngleYFromAcc', 'AngleYFromGyro');
 xlabel('time in seconds');
 ylabel('degree');
 
 figure(2);
 plot(time, angleY, time, AngleYFromAcc, time, AngleYFromGyro);
-legend('angleY','AngleYFromAcc', 'AngleYFromGyro', 'AngleZFromGyro');
+legend('angleY','AngleYFromAcc', 'AngleYFromGyro');
 xlabel('time in seconds');
 ylabel('degree');
