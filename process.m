@@ -1,45 +1,52 @@
 clear all;
 
 %specify how many entries from the log file to read
-m = 10000;
+m = 3800;
 
 [time, accX, accY, accZ, gyroX, gyroY, gyroZ, dt] = readDataFromSensorLog(m);
 
-AngleXFromGyro = cumsum(gyroX) * dt;
-AngleYFromGyro = cumsum(gyroY) * dt;
-AngleZFromGyro = cumsum(gyroZ) * dt;
-AngleXFromAcc = atand( accX./ sqrt(accY.^2 + accZ.^2) ) ; % degree
-AngleYFromAcc = atand( accY./ sqrt(accX.^2 + accZ.^2) ) ; % degree
-AngleZFromAcc = atand( accZ./ sqrt(accX.^2 + accY.^2) ) ; % degree
+AngleXFromGyro = cumsum(gyroX) * dt; % degree
+AngleYFromGyro = cumsum(gyroY) * dt; % degree
+% AngleZFromGyro = cumsum(gyroZ) * dt; % degree
 
-highCoe = 0.98; 
-lowCoe = 0.02;
+AngleYFromAcc = atand( -accX./ sqrt(accY.^2 + accZ.^2) ) ; % degree
+AngleXFromAcc = atand( accY./ sqrt(accX.^2 + accZ.^2) ) ; % degree
+% AngleZFromAcc = atand( accZ./ sqrt(accX.^2 + accY.^2) ) ; % degree
 
-angleX = zeros(m, 1);
-angleX(1) = highCoe * (gyroX(1)*dt) + lowCoe * AngleXFromAcc(1);
+figure(1); plot(time, AngleXFromGyro, time, AngleXFromAcc);
+legend('AngleXFromGyro','AngleXFromAcc');
 
-angleY = zeros(m, 1);
-angleY(1) = highCoe * (gyroY(1)*dt) + lowCoe * AngleYFromAcc(1);
-
-angleZ = zeros(m, 1);
-angleZ(1) = highCoe * (gyroZ(1)*dt) + lowCoe * AngleZFromAcc(1);
-
-%hSurface = plotCamera();
-%origin = [0, 0, 0];
-%direction = [1 1 1];
-
-for i = 2:m
- angleX(i) = highCoe * ( angleX(i-1) + gyroX(i) * dt ) + lowCoe * AngleXFromAcc(i);
- angleY(i) = highCoe * ( angleY(i-1) + gyroY(i) * dt ) + lowCoe * AngleYFromAcc(i);
- angleZ(i) = highCoe * ( angleZ(i-1) + gyroZ(i) * dt ) + lowCoe * AngleZFromAcc(i); 
- %somehow rotate using the previous pos as reference, thus here subtract
- %the previoius pos
- %rotate(hSurface,direction, (angleY(i) - angleY(i-1)) );
- 
-%  figure(2); plot(time, angleX, time, angleY, time, angleZ);
-%  legend('angleX','angleY', 'angleZ')
-   drawnow
-end
-
-figure(1); plot(time, angleX, time, AngleXFromAcc, time, AngleXFromGyro);
-legend('angleX','AngleXFromAcc', 'AngleXFromGyro')
+% highCoe = 0.98; 
+% lowCoe = 0.02;
+% 
+% angleX = zeros(m, 1);
+% angleX(1) = highCoe * (gyroX(1)*dt) + lowCoe * AngleXFromAcc(1);
+% 
+% angleY = zeros(m, 1);
+% angleY(1) = highCoe * (gyroY(1)*dt) + lowCoe * AngleYFromAcc(1);
+% 
+% % angleZ = zeros(m, 1);
+% % angleZ(1) = highCoe * (gyroZ(1)*dt) + lowCoe * AngleZFromAcc(1);
+% 
+% %hSurface = plotCamera();
+% %origin = [0, 0, 0];
+% %direction = [1 1 1];
+% 
+% for i = 2:m
+%  angleX(i) = highCoe * ( angleX(i-1) + gyroX(i) * dt ) + lowCoe * AngleXFromAcc(i);
+%  angleY(i) = highCoe * ( angleY(i-1) + gyroY(i) * dt ) + lowCoe * AngleYFromAcc(i);
+% %  angleZ(i) = highCoe * ( angleZ(i-1) + gyroZ(i) * dt ) + lowCoe * AngleZFromAcc(i); 
+% 
+%  %somehow rotate using the previous pos as reference, thus here subtract
+%  %the previoius pos
+%  %rotate(hSurface,direction, (angleY(i) - angleY(i-1)) );
+%  
+% %  figure(2); plot(time, angleX, time, angleY, time, angleZ);
+% %  legend('angleX','angleY', 'angleZ')
+%    drawnow
+% end
+% 
+% figure(1); plot(time, angleY, time, AngleYFromAcc, time, AngleYFromGyro);
+% legend('angleY','AngleYFromAcc', 'AngleYFromGyro');
+% xlabel('time in seconds');
+% ylabel('degree');
