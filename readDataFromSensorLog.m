@@ -1,6 +1,6 @@
 function [time, accX, accY, accZ, gyroX, gyroY, gyroZ, dt] = readDataFromSensorLog(m)
 
-filename = 'AroundYBackThenForth.csv';
+filename = 'log_0000.csv';
 rawData = readtable(filename); 
 
 time = rawData.unit__timestamp_ms_(1:m) / 1000; %second

@@ -1,7 +1,7 @@
 clear all;
 
 %specify how many entries from the log file to read
-m = 3840;
+m = 8000;
 
 [time, accX, accY, accZ, gyroX, gyroY, gyroZ, dt] = readDataFromSensorLog(m);
 
@@ -43,14 +43,18 @@ for i = 2:m
 %  drawnow
 end
 
-figure(1); 
-plot(time, angleX, time, AngleXFromAcc, time, AngleXFromGyro);
-legend('angleX','AngleXFromAcc', 'AngleXFromGyro');
-xlabel('time in seconds');
-ylabel('degree');
+estimateFrequency(angleX, 250);
+%what do try next: use FFT to transfer data to frequency domain, then use
+%findpeak to find top 8 peaks and get corresponding frequency!
 
-figure(2);
-plot(time, angleY, time, AngleYFromAcc, time, AngleYFromGyro);
-legend('angleY','AngleYFromAcc', 'AngleYFromGyro', 'AngleZFromGyro');
-xlabel('time in seconds');
-ylabel('degree');
+% figure(1); 
+% plot(time, angleX);
+% legend('angleX');
+% xlabel('time in seconds');
+% ylabel('degree');
+
+% figure(2);
+% plot(time, angleY, time, AngleYFromAcc, time, AngleYFromGyro);
+% legend('angleY','AngleYFromAcc', 'AngleYFromGyro', 'AngleZFromGyro');
+% xlabel('time in seconds');
+% ylabel('degree');
